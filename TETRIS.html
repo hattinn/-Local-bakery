@@ -6,10 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>キクちゃんテトリス</title>
     <style>
-        .can{
-            width:300px;
-            height: auto;
+        .can{width:300px;height: auto;
             background: url(bgi1.png) center/cover;}
+        /*.over{background-color: #ccc;}*/
     </style>
 </head>
 <body style="margin:0;padding:0;">
@@ -24,6 +23,8 @@
 <audio id="se1" src="se1.mp3"></audio>
 <audio id="se2" src="se2.mp3"></audio>
 <audio id="se3" src="se3.mp3"></audio>
+<audio id="over1" src="over1.mp3"></audio>
+<audio id="over2" src="over2.mp3"></audio>
 
 <!--<audio id="chanchan" src="chanchan.mp3"></audio>-->
 
@@ -34,11 +35,20 @@
 let bgm1 = document.getElementById("bgm1");
 let bgm2 = document.getElementById("bgm2");
 let bgm3 = document.getElementById("bgm3");
+bgm2.volume = 0.3;
+bgm3.volume = 0.3;
 let bgm  = bgm1;/*現在のBGM*/
 
 let se1  = document.getElementById("se1");  /*衝突*/
 let se2  = document.getElementById("se2");  /*ライン消去*/
 let se3  = document.getElementById("se3");  /*回転*/
+
+
+let overBgm1 = document.getElementById("over1");
+let overBgm2 = document.getElementById("over2");
+overBgm1.volume = 0.5;
+overBgm2.volume = 0.5;
+let overBgm = overBgm2;/*ゲームオーバー*/
 
 // スコア、レベル
 let lv    = 0;
@@ -228,16 +238,57 @@ function drawAll()
 	if(over)
 	{
 	   // chanchan.play();
-	    
+	    bgm.pause();
+	    overBgm.currentTime = 0;
+	    if(score>=10000){overBgm=overBgm1;}
+	    overBgm.play();
+	   
+	    con.fillStyle = "rgba(33,33,33,0.6)";
+        con.fillRect(0,0,can.width, can.height);
 		let s="GAME OVER";
-		con.font = "40px 'ＭＳ ゴシック'";
+		con.font = "50px 'ＭＳ ゴシック'";
 		let w = con.measureText(s).width;
 		let x = SCREEN_W/2 - w/2;
-		let y = SCREEN_H/2 - 20;
+		let y = SCREEN_H/2 - 70;
 		con.lineWidth = 4;
 		con.strokeText(s,x,y);
 		con.fillStyle="white";
 		con.fillText(s,x,y);
+		
+		x = SCREEN_W/2 - w/2 -20;
+		con.fillstyle = "#555";
+		con.fillRect(x,y+90,270,225)
+		
+		s = "score";
+		con.font = " 15px ";
+		w = con.measureText(s).width;
+		x = SCREEN_W/2 - w/2 - 50;
+		y = SCREEN_H/2 + 80;
+// 		con.lineWidth = 1;
+// 		con.strokeText(s,x,y);
+		con.fillStyle="gray";
+		con.fillText(s,x,y);
+		
+		s = ""+score;
+		y = SCREEN_H/2 + 140;
+// 		con.strokeText(s,x,y);
+		con.fillStyle="#3c3";
+		con.fillText(s,x,y);
+		
+		s = "Lv:";
+		w = con.measureText(s).width;
+		y = SCREEN_H/2 + 220;
+// 		con.strokeText(s,x,y);
+		con.fillStyle="gray";
+		con.fillText(s,x,y);
+		
+		s = lv;
+		con.font = " 20px ";
+		x = w + 45;
+		con.fillStyle="skyblue";
+		con.fillText(s,x,y);
+		
+		
 		
 		can.onclick = function ()
 		{
@@ -327,6 +378,7 @@ function checkLine()
 		
 		if(flag)
 		{
+		    
 			linec++;
 			score = linec * ( lvb * 1000);
 			
