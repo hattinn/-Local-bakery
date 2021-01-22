@@ -5,17 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>キクちゃんテトリス</title>
-    <style>
-        .can{width:300px;height: auto;
-            background: url(bgi1.png) center/cover;}
-        /*.over{background-color: #ccc;}*/
-    </style>
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body style="margin:0;padding:0;">
-
-<div class="can-wrapper" style="width:300px;margin:0 auto;">
-<canvas id="can" class="can"></canvas>
-</div>
+<body>
+<section>
+    <div class="can-wrapper">
+        <canvas id="can" class="can"></canvas>
+        <div id="control" class="control">
+            <div id="buttonwrap" class="buttonwrap">
+                <button id="left" class="left" >
+                    <i class="fas fa-caret-left" ></i></button>
+                <button id="rotate" class="rotate ">
+                    <i class="fas fa-redo-alt"></i></button>
+                <button id="down" class="down">
+                    <i class="fas fa-sort-down"></i></button>
+                <button id="right" class="right">
+                    <i class="fas fa-caret-right"></i></button>
+            </div>
+        </div>
+    </div>
+    
+</section>
 
 <audio id="bgm1" src="bgm1.mp3"></audio>
 <audio id="bgm2" src="bgm2.mp3"></audio>
@@ -29,6 +40,25 @@
 <!--<audio id="chanchan" src="chanchan.mp3"></audio>-->
 
 <script>
+// スマホ表示 ⇔ PC表示 (切り替え)
+const wrap = document.getElementById('buttonwrap');
+let window_size = window.innerWidth;
+console.log(window_size);
+if(window_size>=601)wrap.classList.add('off')
+
+// スマホ操作設定
+let tapCount = 0 ;
+
+let tapLeft   = document.getElementById( "left"   );
+let tapRight  = document.getElementById( "right"  );
+let tapDown   = document.getElementById( "down"   );
+let tapRotate = document.getElementById( "rotate" );
+
+tapLeft.addEventListener("touchstart", touchLeft);
+tapRight.addEventListener("touchstart", touchRight);
+tapDown.addEventListener("touchstart", touchDown);
+tapRotate.addEventListener("touchstart", touchRotate);
+
 
 //BGM,効果音
 
@@ -37,31 +67,31 @@ let bgm2 = document.getElementById("bgm2");
 let bgm3 = document.getElementById("bgm3");
 bgm2.volume = 0.3;
 bgm3.volume = 0.3;
-let bgm  = bgm1;/*現在のBGM*/
+let bgm  = bgm1;/*BGM初期値*/
 
 let se1  = document.getElementById("se1");  /*衝突*/
 let se2  = document.getElementById("se2");  /*ライン消去*/
 let se3  = document.getElementById("se3");  /*回転*/
-
+se3.volume = 0.5;
 
 let overBgm1 = document.getElementById("over1");
 let overBgm2 = document.getElementById("over2");
 overBgm1.volume = 0.5;
 overBgm2.volume = 0.5;
-let overBgm = overBgm2;/*ゲームオーバー*/
+let overBgm = overBgm2;/*ゲームオーバー音*/
 
-// スコア、レベル
+// スコア
 let lv    = 0;
-let lvb   = 0;       /* レベルボーナス */
-let linec = 0;                    /* 消したライン数 */
-let score = 0;/* トータルスコア */
+let lvb   = 0;/*レベルボーナス*/
+let linec = 0;/*消したライン数*/
+let score = 0;/*トータルスコア*/
 
 //落ちるスピード
-let gameSpeed = 1000;/* 初期値(1000)*/
+let gameSpeed = 1000;/* 初期値*/
 
 //フィールドサイズ
 const FIELD_COL = 10;
-const FIELD_ROW = 20;
+const FIELD_ROW = 18;
 
 //ブロック一つのサイズ(ピクセル)
 const BLOCK_SIZE = 30;
@@ -155,7 +185,6 @@ let con = can.getContext("2d");
 
 can.width  = SCREEN_W;
 can.height = SCREEN_H;
-can.style.border = "4px solid #555";
 
 tetro_t = Math.floor( Math.random()*(TETRO_TYPES.length-1) )+1;
 tetro = TETRO_TYPES[ tetro_t ];
@@ -240,7 +269,7 @@ function drawAll()
 	   // chanchan.play();
 	    bgm.pause();
 	    overBgm.currentTime = 0;
-	    if(score>=10000){overBgm=overBgm1;}
+	    if(score>=49999){overBgm=overBgm1;}
 	    overBgm.play();
 	   
 	    con.fillStyle = "rgba(33,33,33,0.6)";
@@ -393,11 +422,17 @@ function checkLine()
 			    if(gameSpeed<=0)gameSpeed = 1;
 			}
 			
-			if( linec % 15 == 0 )
-			{
-			       bgm.pause();
-			       bgm = bgm3;
+			if(linec >= 60)
+			{   bgm.pause();
+			    bgm = bgm2;
+			}else if(linec >= 20 || linec >= 100)
+			{   bgm.pause();
+	            bgm = bgm3;
+			}else if(linec >= 40 || linec >= 80)
+			{   bgm.pause();
+			    bgm = bgm1;
 			}
+			
 			
 			for(let ny = y; ny>0 ;ny-- )
 			{
@@ -432,6 +467,64 @@ function dropTetro()
 	}
 	drawAll();
 }
+
+// タップされた時の処理
+
+function touchLeft(e)
+{
+    bgm.play();
+	if(over)return;
+	
+    if( checkMove( -1, 0 ) ){tetro_x--;}
+    // drowAll();
+}
+function touchRight(e)
+{
+    bgm.play();
+	if(over)return;
+	
+    if( checkMove(  1, 0 ) )tetro_x++;
+    // drowAll();
+}
+function touchDown(e)
+{
+    bgm.play();
+	if(over)return;
+	
+    if( !tapCount )
+        	{
+        		++tapCount ;
+        
+                if( checkMove(  0, 1 ) )tetro_y++;
+        		setTimeout( function() {
+        			tapCount = 0 ;
+        		}, 500 ) ;
+        
+        	// ダブルタップ判定
+        	} else {
+        		e.preventDefault();
+        		
+        		while( checkMove(  0, 1 ) )tetro_y++;
+        		
+        		tapCount = 0 ;
+        	}
+    // drowAll();
+}
+function touchRotate(e)
+{
+    bgm.play();
+	if(over)return;
+    
+    let ntetro = rotate();
+	if( checkMove( 0, 0, ntetro) )
+	{
+	    tetro = ntetro;
+	    se3.currentTime = 0;
+	    se3.play();
+	}
+// 	drowAll();
+}
+
 
 //キーボードが押された時の処理
 document.onkeydown = function(e)
