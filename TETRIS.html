@@ -2,11 +2,12 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>キクちゃんテトリス</title>
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script type='application/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js'></script>
 </head>
 <body>
 <section>
@@ -40,26 +41,157 @@
 <!--<audio id="chanchan" src="chanchan.mp3"></audio>-->
 
 <script>
-// スマホ表示 ⇔ PC表示 (切り替え)
-const wrap = document.getElementById('buttonwrap');
-let window_size = window.innerWidth;
-console.log(window_size);
-if(window_size>=601)wrap.classList.add('off')
+if ('addEventListener' in document) {
+    document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+    }, false);
+}
+</script>
 
-// スマホ操作設定
-let tapCount = 0 ;
+<script>
+// スマホ ⇔ PC表示切り替え
+    let window_size = window.innerWidth;
+    const wrap = document.getElementById('buttonwrap');
+    if(window_size>=601)wrap.classList.add('off');
 
-let tapLeft   = document.getElementById( "left"   );
-let tapRight  = document.getElementById( "right"  );
-let tapDown   = document.getElementById( "down"   );
-let tapRotate = document.getElementById( "rotate" );
+// スマホ
+if(window_size<=600)
+{
+    // スマホ操作設定
+    let tapCount = 0 ;
+    
+    let tapLeft   = document.getElementById( "left"   );
+    let tapRight  = document.getElementById( "right"  );
+    let tapDown   = document.getElementById( "down"   );
+    let tapRotate = document.getElementById( "rotate" );
+    
+    // tapLeft.addEventListener(  "touchstart", touchLeft  );
+    // tapRight.addEventListener( "touchend"  , touchRight );
+    // tapDown.addEventListener(  "touchstart", touchDown  );
+    // tapRotate.addEventListener("touchstart", touchRotate);
+    
+    tapLeft.addEventListener(  "touchstart", touchLeft  );
+    tapRight.addEventListener( "touchstart"  , touchRight );
+    tapDown.addEventListener(  "touchstart", touchDown  );
+    tapRotate.addEventListener("touchstart", touchRotate);
+    
+    // let flag = false;
+    // tapLeft.addEventListener(  "touchstart", function()
+    // {
+    //     console.log(tapLeft);
+    //     flag = true;
+    //     touchLeft()
+    // });
+    // tapLeft.addEventListener(  'click', function()
+    // {
+    //   if (flag) {
+    //     flag = false;
+    //   } else {
+    //     touchLeft();
+    //   }
+    // });
+    
+    // tapRight.addEventListener( "touchstart", function()
+    // {
+    //     flag = true;
+    //     touchRight()
+    // });
+    // tapRight.addEventListener(  'click', function()
+    // {
+    //   if (flag) {
+    //     flag = false;
+    //   } else {
+    //     touchRight();
+    //   }
+    // });
+    
+    // tapDown.addEventListener(  "touchstart", function()
+    // {
+    //     flag = true;
+    //     touchDown()
+    // });
+    // tapDown.addEventListener(  'click', function()
+    // {
+    //   if (flag) {
+    //     flag = false;
+    //   } else {
+    //     touchDown();
+    //   }
+    // });
+    
+    // tapRotate.addEventListener("touchstart",  function()
+    // {
+    //     flag = true;
+    //     touchRotate()
+    // });
+    // tapRotate.addEventListener(  'click', function()
+    // {
+    //   if (flag) {
+    //     flag = false;
+    //   } else {
+    //     touchRotate();
+    //   }
+    // });
+    
 
-tapLeft.addEventListener("touchstart", touchLeft);
-tapRight.addEventListener("touchstart", touchRight);
-tapDown.addEventListener("touchstart", touchDown);
-tapRotate.addEventListener("touchstart", touchRotate);
+        // タップされた時の処理
+    
+    function touchLeft(e)
+    {
+        bgm.play();
+    	if(over)return;
+    	
+        if( checkMove( -1, 0 ) ){tetro_x--;}
+        // drowAll();
+    }
+    function touchRight(e)
+    {
+        bgm.play();
+    	if(over)return;
+    	
+        if( checkMove(  1, 0 ) )tetro_x++;
+        // drowAll();
+    }
+    function touchDown(e)
+    {
+        bgm.play();
+    	if(over)return;
+    	
+        if( !tapCount )
+            	{
+            		++tapCount ;
+            
+                    if( checkMove(  0, 1 ) )tetro_y++;
+            		setTimeout( function() {
+            			tapCount = 0 ;
+            		}, 1) ;
+            
+            	// ダブルタップ判定
+            	} else {
+            		eflag = true;
+            		
+            		while( checkMove(  0, 1 ) )tetro_y++;
+            		
+            		tapCount = 0 ;
+            	}
+        // drowAll();
+    }
+    function touchRotate(e)
+    {
+        bgm.play();
+    	if(over)return;
+        
+        let ntetro = rotate();
+    	if( checkMove( 0, 0, ntetro) )
+    	{
+    	    tetro = ntetro;
+    	    se3.currentTime = 0;
+    	    se3.play();
+    	}
+    // 	drowAll();
+    }
 
-
+}
 //BGM,効果音
 
 let bgm1 = document.getElementById("bgm1");
@@ -468,62 +600,6 @@ function dropTetro()
 	drawAll();
 }
 
-// タップされた時の処理
-
-function touchLeft(e)
-{
-    bgm.play();
-	if(over)return;
-	
-    if( checkMove( -1, 0 ) ){tetro_x--;}
-    // drowAll();
-}
-function touchRight(e)
-{
-    bgm.play();
-	if(over)return;
-	
-    if( checkMove(  1, 0 ) )tetro_x++;
-    // drowAll();
-}
-function touchDown(e)
-{
-    bgm.play();
-	if(over)return;
-	
-    if( !tapCount )
-        	{
-        		++tapCount ;
-        
-                if( checkMove(  0, 1 ) )tetro_y++;
-        		setTimeout( function() {
-        			tapCount = 0 ;
-        		}, 500 ) ;
-        
-        	// ダブルタップ判定
-        	} else {
-        		e.preventDefault();
-        		
-        		while( checkMove(  0, 1 ) )tetro_y++;
-        		
-        		tapCount = 0 ;
-        	}
-    // drowAll();
-}
-function touchRotate(e)
-{
-    bgm.play();
-	if(over)return;
-    
-    let ntetro = rotate();
-	if( checkMove( 0, 0, ntetro) )
-	{
-	    tetro = ntetro;
-	    se3.currentTime = 0;
-	    se3.play();
-	}
-// 	drowAll();
-}
 
 
 //キーボードが押された時の処理
