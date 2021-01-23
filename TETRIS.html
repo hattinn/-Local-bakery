@@ -26,7 +26,6 @@
             </div>
         </div>
     </div>
-    
 </section>
 
 <audio id="bgm1" src="bgm1.mp3"></audio>
@@ -40,13 +39,13 @@
 
 <!--<audio id="chanchan" src="chanchan.mp3"></audio>-->
 
-<script>
-if ('addEventListener' in document) {
-    document.addEventListener('DOMContentLoaded', function() {
-        FastClick.attach(document.body);
-    }, false);
-}
-</script>
+<!--<script>-->
+<!--if ('addEventListener' in document) {-->
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        FastClick.attach(document.body);-->
+<!--    }, false);-->
+<!--}-->
+<!--</script>-->
 
 <script>
 // スマホ ⇔ PC表示切り替え
@@ -54,144 +53,7 @@ if ('addEventListener' in document) {
     const wrap = document.getElementById('buttonwrap');
     if(window_size>=601)wrap.classList.add('off');
 
-// スマホ
-if(window_size<=600)
-{
-    // スマホ操作設定
-    let tapCount = 0 ;
-    
-    let tapLeft   = document.getElementById( "left"   );
-    let tapRight  = document.getElementById( "right"  );
-    let tapDown   = document.getElementById( "down"   );
-    let tapRotate = document.getElementById( "rotate" );
-    
-    // tapLeft.addEventListener(  "touchstart", touchLeft  );
-    // tapRight.addEventListener( "touchend"  , touchRight );
-    // tapDown.addEventListener(  "touchstart", touchDown  );
-    // tapRotate.addEventListener("touchstart", touchRotate);
-    
-    tapLeft.addEventListener(  "touchstart", touchLeft  );
-    tapRight.addEventListener( "touchstart"  , touchRight );
-    tapDown.addEventListener(  "touchstart", touchDown  );
-    tapRotate.addEventListener("touchstart", touchRotate);
-    
-    // let flag = false;
-    // tapLeft.addEventListener(  "touchstart", function()
-    // {
-    //     console.log(tapLeft);
-    //     flag = true;
-    //     touchLeft()
-    // });
-    // tapLeft.addEventListener(  'click', function()
-    // {
-    //   if (flag) {
-    //     flag = false;
-    //   } else {
-    //     touchLeft();
-    //   }
-    // });
-    
-    // tapRight.addEventListener( "touchstart", function()
-    // {
-    //     flag = true;
-    //     touchRight()
-    // });
-    // tapRight.addEventListener(  'click', function()
-    // {
-    //   if (flag) {
-    //     flag = false;
-    //   } else {
-    //     touchRight();
-    //   }
-    // });
-    
-    // tapDown.addEventListener(  "touchstart", function()
-    // {
-    //     flag = true;
-    //     touchDown()
-    // });
-    // tapDown.addEventListener(  'click', function()
-    // {
-    //   if (flag) {
-    //     flag = false;
-    //   } else {
-    //     touchDown();
-    //   }
-    // });
-    
-    // tapRotate.addEventListener("touchstart",  function()
-    // {
-    //     flag = true;
-    //     touchRotate()
-    // });
-    // tapRotate.addEventListener(  'click', function()
-    // {
-    //   if (flag) {
-    //     flag = false;
-    //   } else {
-    //     touchRotate();
-    //   }
-    // });
-    
 
-        // タップされた時の処理
-    
-    function touchLeft(e)
-    {
-        bgm.play();
-    	if(over)return;
-    	
-        if( checkMove( -1, 0 ) ){tetro_x--;}
-        // drowAll();
-    }
-    function touchRight(e)
-    {
-        bgm.play();
-    	if(over)return;
-    	
-        if( checkMove(  1, 0 ) )tetro_x++;
-        // drowAll();
-    }
-    function touchDown(e)
-    {
-        bgm.play();
-    	if(over)return;
-    	
-        if( !tapCount )
-            	{
-            		++tapCount ;
-            
-                    if( checkMove(  0, 1 ) )tetro_y++;
-            		setTimeout( function() {
-            			tapCount = 0 ;
-            		}, 1) ;
-            
-            	// ダブルタップ判定
-            	} else {
-            		eflag = true;
-            		
-            		while( checkMove(  0, 1 ) )tetro_y++;
-            		
-            		tapCount = 0 ;
-            	}
-        // drowAll();
-    }
-    function touchRotate(e)
-    {
-        bgm.play();
-    	if(over)return;
-        
-        let ntetro = rotate();
-    	if( checkMove( 0, 0, ntetro) )
-    	{
-    	    tetro = ntetro;
-    	    se3.currentTime = 0;
-    	    se3.play();
-    	}
-    // 	drowAll();
-    }
-
-}
 //BGM,効果音
 
 let bgm1 = document.getElementById("bgm1");
@@ -600,7 +462,143 @@ function dropTetro()
 	drawAll();
 }
 
+// スマホ
+if(window_size<=600)
+{
+    
+    
+    // スマホ操作設定
+    let tapCount = 0 ;
+    
+    let tapLeft   = document.getElementById( "left"   );
+    let tapRight  = document.getElementById( "right"  );
+    let tapDown   = document.getElementById( "down"   );
+    let tapRotate = document.getElementById( "rotate" );
+    
+    tapLeft.addEventListener(  "touchstart", touchLeft  ,{passive:false},{once:true});
+    tapRight.addEventListener( "touchend"  , touchRight ,{passive:false},{once:true});
+    tapDown.addEventListener(  "touchstart", touchDown  ,{passive:false},{once:true});
+    tapRotate.addEventListener("touchstart", touchRotate,{passive:false},{once:true});
+    
+    
+    // let flag = false;
+    // tapLeft.addEventListener(  "touchstart", function()
+    // {
+    //     console.log(tapLeft);
+    //     flag = true;
+    //     touchLeft()
+    // });
+    // tapLeft.addEventListener(  'click', function()
+    // {
+    //   if (flag) {
+    //     flag = false;
+    //   } else {
+    //     touchLeft();
+    //   }
+    // });
+    
+    // tapRight.addEventListener( "touchstart", function()
+    // {
+    //     flag = true;
+    //     touchRight()
+    // });
+    // tapRight.addEventListener(  'click', function()
+    // {
+    //   if (flag) {
+    //     flag = false;
+    //   } else {
+    //     touchRight();
+    //   }
+    // });
+    
+    // tapDown.addEventListener(  "touchstart", function()
+    // {
+    //     flag = true;
+    //     touchDown()
+    // });
+    // tapDown.addEventListener(  'click', function()
+    // {
+    //   if (flag) {
+    //     flag = false;
+    //   } else {
+    //     touchDown();
+    //   }
+    // });
+    
+    // tapRotate.addEventListener("touchstart",  function()
+    // {
+    //     flag = true;
+    //     touchRotate()
+    // });
+    // tapRotate.addEventListener(  'click', function()
+    // {
+    //   if (flag) {
+    //     flag = false;
+    //   } else {
+    //     touchRotate();
+    //   }
+    // });
+    
+    
+    // タップされた時の処理
+    
+    function touchLeft(e)
+    {
+        e.preventDefault();
+        bgm.play();
+    	if(over)return;
+        if( checkMove( -1, 0 ) ){tetro_x--;}
+        drawAll();
+    }
+    function touchRight(e)
+    {
+        e.preventDefault();
+        bgm.play();
+    	if(over)return;
+    	
+        if( checkMove(  1, 0 ) )tetro_x++;
+        drawAll();
+    }
+    function touchDown(e)
+    {
+        e.preventDefault();
+        bgm.play();
+    	if(over)return;
+    	
+        if( !tapCount )
+            	{
+            		++tapCount ;
+            
+                    if( checkMove(  0, 1 ) )tetro_y++;
+            		setTimeout( function() {
+            			tapCount = 0 ;
+            		}, 350) ;
+            
+            	// ダブルタップ判定
+            	} else {
+            		while( checkMove(  0, 1 ) )tetro_y++;
+            		
+            		tapCount = 0 ;
+            	}
+        drawAll();
+    }
+    function touchRotate(e)
+    {
+        e.preventDefault();
+        bgm.play();
+    	if(over)return;
+        
+        let ntetro = rotate();
+    	if( checkMove( 0, 0, ntetro) )
+    	{
+    	    tetro = ntetro;
+    	    se3.currentTime = 0;
+    	    se3.play();
+    	}
+    	drawAll();
+    }
 
+}
 
 //キーボードが押された時の処理
 document.onkeydown = function(e)
