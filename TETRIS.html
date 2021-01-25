@@ -504,7 +504,7 @@ if(window_size<=600)
     let tapRotate = document.getElementById( "rotate" );
     
     tapLeft.addEventListener(  "touchstart", touchLeft  ,{passive:false},{once:true});
-    tapRight.addEventListener( "touchend"  , touchRight ,{passive:false},{once:true});
+    tapRight.addEventListener( "touchstart", touchRight ,{passive:false},{once:true});
     tapDown.addEventListener(  "touchstart", touchDown  ,{passive:false},{once:true});
     tapRotate.addEventListener("touchstart", touchRotate,{passive:false},{once:true});
  
