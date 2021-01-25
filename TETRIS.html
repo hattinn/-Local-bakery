@@ -37,34 +37,34 @@
 <audio id="over2" src="over2.mp3"></audio>
 <!--<audio id="chanchan" src="chanchan.mp3"></audio>-->
 
+
 <script>
 // スマホ ⇔ PC表示切り替え
 let window_size = window.innerWidth;
-const wrap = document.getElementById('buttonwrap');
-if(window_size>=601)wrap.classList.add('off');
+const wrap 			= document.getElementById('buttonwrap');
+if(window_size >= 601)wrap.classList.add('off');
 
 
 //BGM,効果音
-let bgm1 = document.getElementById("bgm1");
-let bgm2 = document.getElementById("bgm2");
-let bgm3 = document.getElementById("bgm3");
-bgm2.volume = 0.3;
-bgm3.volume = 0.3;
-let bgm  = bgm1;/*BGM初期値*/
-var bgmFlags = [0,0,0];
-console.log(bgmFlags);
+let bgm1 		 = document.getElementById("bgm1");
+let bgm2 		 = document.getElementById("bgm2");
+let bgm3 		 = document.getElementById("bgm3");
+let bgm  		 = bgm1;   /*BGM初期値*/
+// var bgmFlags = [0,0,0];/*BGMフラグ初期値*/
 
-let se1  = document.getElementById("se1");  /*衝突*/
-let se2  = document.getElementById("se2");  /*ライン消去*/
-let se3  = document.getElementById("se3");  /*回転*/
-se3.volume = 0.5;
+let se1  		 = document.getElementById("se1");  /*衝突*/
+let se2  		 = document.getElementById("se2");  /*ライン消去*/
+let se3  		 = document.getElementById("se3");  /*回転*/
 
 let overBgm1 = document.getElementById("over1");
 let overBgm2 = document.getElementById("over2");
+let overBgm  = overBgm2;/*ゲームオーバー音の初期値*/
+
+bgm2.volume  		= 0.3;
+bgm3.volume  		= 0.3;
+se3.volume 			= 0.5;
 overBgm1.volume = 0.5;
 overBgm2.volume = 0.7;
-let overBgm = overBgm2;/*ゲームオーバー音*/
-
 // スコア
 let lv    = 0;
 let lvb   = 1;/*レベルボーナス*/
@@ -174,6 +174,9 @@ can.height = SCREEN_H;
 tetro_t = Math.floor( Math.random()*(TETRO_TYPES.length-1) )+1;
 tetro = TETRO_TYPES[ tetro_t ];
 
+
+
+
 // //背景画像を生成
 // var bgimg = new Image();
 // bgimg.src = "bgi1.png";
@@ -248,9 +251,11 @@ function drawAll()
 	if(over)
 	{
 	    // chanchan.play();
+	    
+	  bgm.currentTime = 0;
 	  bgm.pause();
 	  overBgm.currentTime = 0;
-	  if(score>=49999){overBgm=overBgm1;}
+	  if(score>=50000){overBgm=overBgm1;}
 	  overBgm.play();
 	   
 	  con.fillStyle = "rgba(33,33,33,0.6)";
@@ -367,18 +372,6 @@ function fixTetro()
 }
 
 //ラインが揃ったかチェックして消す
-
-function bgmCheck(check)
-{
-	bgmFlags[check]++;
-	console.log(bgmFlags[check]);
-	// console.log();
-	// return ;
-	
-	// console.log(bgmFlogs[check]);
-}
-
-
 function checkLine()
 {
 	for(let y=0; y<FIELD_ROW ; y++ )
@@ -392,71 +385,61 @@ function checkLine()
 				flag=false;
 				break;
 			}
-			
-			
-			
 		}
-		
-		
+			
 		/*ラインが消えたら*/
 		if(flag)
 		{
-			// console.log("line消えたよ！");
 			linec++;
-			// console.log("linec" + linec);
 			score = linec * ( lvb * 1000);
-			// console.log("score" + score);
 			se2.currentTime = 0;
 			se2.play();
 			
-			/*消したライン数合計が４の倍数ごとに*/
+			/*消したライン数(合計)が４ごとに*/
 			if( linec % 4 == 0 )
 			{
-			    lv++;
-			    lvb = 1 + ( 0.1 * lv );
-			    gameSpeed = gameSpeed - 50;
-			    if(gameSpeed<=0)gameSpeed = 1;
+			    lv++;													/*レベルアップ*/
+			    lvb = 1 + ( 0.1 * lv );				/*スコア補正をプラス*/
+			    gameSpeed = gameSpeed - 50;		/*ゲームスピードアップ*/
+			    if(gameSpeed<=0)gameSpeed = 1;/*ゲームスピード上限*/
+			    
+					/*レベルを条件にBGMと背景更新*/
+					if(lv == 3 || lv == 14)
+					{		bgm.pause();
+							bgm.currentTime =0;
+					    bgm = bgm3;
+					    overBgm.play();
+					    can.classList.remove('bgi1');
+					    can.classList.remove('bgi4');
+					    can.classList.add('bgi2');
+					    
+					}else if(lv == 6 || lv == 20)
+					{		bgm.pause();
+							bgm.currentTime =0;
+					    bgm = bgm1;
+					    overBgm.play();
+					    can.classList.remove('bgi2');
+					    can.classList.add('bgi3');
+					    
+					}else if(lv == 10 || lv == 27)
+					{		bgm.pause();
+							bgm.currentTime =0;
+					    bgm = bgm2;
+					    overBgm.play();
+					    can.classList.remove('bgi3');
+					    can.classList.add('bgi4');
+					    
+					}else if(lv >= 35)
+					{		bgm.pause();
+							bgm.currentTime =0;
+					    bgm = bgm1;
+					    overBgm.play();
+					    can.classList.remove('bgi4');
+					    can.classList.add('bgi1');
+					    
+					}
+					
 			}
-			
-			
-			if(linec >= 35 && bgmFlags[1] < 1)
-			{
-					bgm.pause();
-					bgm.currentTime =0;
-			    bgm = bgm2;
-			    overBgm.play();
-			    can.classList.remove('bgi3');
-			    can.classList.add('bgi4');
-			    
-			    bgmCheck(1);
-					// bgmFlags.bgmF2++;
-			    
-			}else if((linec >= 10 || linec >= 70 ) && bgmFlags[2] < 1)
-			{
-					bgm.pause();
-					bgm.currentTime =0;
-	        bgm = bgm3;
-	        overBgm.play();
-	        can.classList.remove('bgi4');
-	        can.classList.add('bgi2');
-	        bgmCheck(2);
-	        
-	        // bgmFlags.bgmF3++;
-	        
-			}else if((linec >= 20 || linec >= 50 ) && bgmFlags[0] < 1)
-			{
-					bgm.pause();
-					bgm.currentTime =0;
-			    bgm = bgm1;
-			    overBgm.play();
-			    can.classList.remove('bgi2');
-			    can.classList.add('bgi3');
-			    
-			    bgmCheck(0);
-			    
-			    // bgmFlags.bgmF1++;
-			}
-			
 			
 			for(let ny = y; ny>0 ;ny-- )
 			{
@@ -465,6 +448,7 @@ function checkLine()
 					field[ny][nx] = field[ny-1][nx];
 				}
 			}
+			
 		}
 	}
 }
