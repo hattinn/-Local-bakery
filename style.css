@@ -8,9 +8,9 @@ box-sizing: border-box;}
 body{width:100%;margin:0;padding:0;}
 .can{
     width: 100%;
-    background: url(bgi1.png) center/cover;
     border: 9px solid #9b5726;
     }
+.bgi1{background: url(bgi1.png) center/cover;}
 .bgi2{background: url(bgi2.png) center/cover;}
 .bgi3{background: url(bgi3.png) center/cover;}
 .bgi4{background: url(bgi4.jpg) center/cover;}
