@@ -18,14 +18,14 @@ body{height: 100vh;margin:0;padding:0;}
 .can-wrapper
 {
 width:100vw;
-height: 92%;
+height: 95%;
 margin:0 auto;
 /*border: 8px solid #9b5726;*/
 }
 .can{
 	border: 1.5vw solid #c87bd6;
 	width: 97vw;
-	height: 85%;
+	height: 75%;
 	}
 	
 .control
