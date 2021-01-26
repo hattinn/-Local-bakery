@@ -77,14 +77,15 @@ let gameSpeed = 1000;/* 初期値*/
 
 //フィールドサイズ
 const FIELD_COL = 10;
-const FIELD_ROW = 18;
+const FIELD_ROW = 15;
 
 //ブロック一つのサイズ(ピクセル)
-const BLOCK_SIZE = 30;
+const BLOCK_SIZE = 25;
 
 //スクリーンサイズ
 const SCREEN_W = BLOCK_SIZE * FIELD_COL;
 const SCREEN_H = BLOCK_SIZE * FIELD_ROW;
+
 
 //テトロミノのサイズ
 const TETRO_SIZE =4;
@@ -104,7 +105,7 @@ const TETRO_COLORS =[
 	"#444"			//9黒
 ];
 
-//テトロミノ本体
+//テトロミノの種類
 const TETRO_TYPES = [
 	[],								/*0.空っぽ*/
 	
@@ -189,16 +190,18 @@ let field = [];
 //ゲームオーバーフラグ
 let over = false;
 
+// キャンバスとコンテキストの取得
 let can = document.getElementById("can");
 let con = can.getContext("2d");
 
+
+// キャンバスサイズを設定
 can.width  = SCREEN_W;
 can.height = SCREEN_H;
 
+// テトロのタイプをランダム取得、設定
 tetro_t = Math.floor( Math.random()*(TETRO_TYPES.length-1) )+1;
 tetro = TETRO_TYPES[ tetro_t ];
-
-
 
 
 // //背景画像を生成
@@ -210,20 +213,19 @@ tetro = TETRO_TYPES[ tetro_t ];
 // con.drawImage(bgimg, 0, 0, 300, 600);  //300x600に縮小表示
 // }
 
-
 init();
 drawAll();
 setInterval( dropTetro, gameSpeed );
 
 
-
 //初期化
 function init()
 {
-	//フィールドのクリア
+	//フィールドを準備して全座標に0を入れる
 	for(let y=0; y<FIELD_ROW ; y++ )
 	{
-		field[y] = [];
+		field[y] = [];/*２次元配列化*/
+		
 		for(let x=0; x<FIELD_COL ; x++ )
 		{
 			field[y][x] =0;
@@ -238,9 +240,9 @@ function init()
 //ブロック一つを描画
 function drawBlock(x,y,c)
 {
-	let px = x * BLOCK_SIZE;
-	let py = y * BLOCK_SIZE;
-	con.fillStyle=TETRO_COLORS[c];
+	let px = x * BLOCK_SIZE;/*プリントするx*/
+	let py = y * BLOCK_SIZE;/*プリントするy*/
+	con.fillStyle=TETRO_COLORS[c];/*テトロごとに設定された色*/
 	con.fillRect(px,py,BLOCK_SIZE,BLOCK_SIZE);
 	con.strokeStyle="black";
 	con.strokeRect(px,py,BLOCK_SIZE,BLOCK_SIZE);
@@ -249,23 +251,25 @@ function drawBlock(x,y,c)
 //全部描画
 function drawAll()
 {
-	con.clearRect(0,0,SCREEN_W,SCREEN_H);
+	con.clearRect(0,0,SCREEN_W,SCREEN_H);/*全描画をクリア*/
 	
+	/*フィールド上のブロックの描画*/
 	for(let y=0; y<FIELD_ROW ; y++ )
 	{
 		for(let x=0; x<FIELD_COL ; x++ )
 		{
-			if( field[y][x] )
+			if( field[y][x] )/*0以外なら描画*/
 			{
-				drawBlock(x,y,field[y][x]);
+				drawBlock(x,y,field[y][x]);/*x座標,y座標,テトロタイプの色*/
 			}
 		}
 	}
+	/*テトロ本体（操作中）の描画*/
 	for(let y=0; y<TETRO_SIZE ; y++ )
 	{
 		for(let x=0; x<TETRO_SIZE ; x++ )
 		{
-			if( tetro[y][x] )
+			if( tetro[y][x] )/*テトロ本体の形*/
 			{
 				drawBlock(tetro_x+x, tetro_y+y,tetro_t);
 			}
