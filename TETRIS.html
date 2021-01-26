@@ -77,10 +77,10 @@ let gameSpeed = 1000;/* 初期値*/
 
 //フィールドサイズ
 const FIELD_COL = 10;
-const FIELD_ROW = 18;
+const FIELD_ROW = 14;
 
 //ブロック一つのサイズ(ピクセル)
-const BLOCK_SIZE = 30;
+const BLOCK_SIZE = window_size/10 -1;
 
 //スクリーンサイズ
 const SCREEN_W = BLOCK_SIZE * FIELD_COL;
@@ -162,13 +162,13 @@ const TETRO_TYPES = [
 		[ 0, 1, 0, 0 ],
 		[ 0, 0, 0, 0 ],
 		[ 0, 0, 0, 0 ]
-	],
-	[									// 10.big
-		[ 1, 1, 1, 1 ],
-		[ 1, 1, 1, 1 ],
-		[ 1, 1, 1, 1 ],
-		[ 0, 0, 0, 0 ]
 	]
+	// [									// 10.big
+	// 	[ 1, 1, 1, 1 ],
+	// 	[ 1, 1, 1, 1 ],
+	// 	[ 1, 1, 1, 1 ],
+	// 	[ 0, 0, 0, 0 ]
+	// ]
 ];
 
 //初期位置
@@ -194,6 +194,7 @@ let over = false;
 let can = document.getElementById("can");
 let con = can.getContext("2d");
 
+// can.style.border = "4px solid brown";
 
 // キャンバスサイズを設定
 can.width  = SCREEN_W;
@@ -298,16 +299,16 @@ function drawAll()
 		con.fillStyle="white";
 		con.fillText(s,x,y);
 		
-		x = SCREEN_W/2 - w/2 -20;
-		con.fillstyle = "#555";
-		con.fillRect(x,y+90,270,225)
+		// x = SCREEN_W/2 - w/2 -20;
+		// con.fillstyle = "#555";
+		// con.fillRect(x,y+90,270,225)
 		
 		s = "score";
 		con.font = " 15px ";
 		w = con.measureText(s).width;
 		x = SCREEN_W/2 - w/2 - 50;
 		y = SCREEN_H/2 + 80;
-		con.fillStyle="gray";
+		con.fillStyle="white";
 		con.fillText(s,x,y);
 		
 		s = ""+score;
@@ -318,12 +319,12 @@ function drawAll()
 		s = "Lv:";
 		w = con.measureText(s).width;
 		y = SCREEN_H/2 + 220;
-		con.fillStyle="gray";
+		con.fillStyle="white";
 		con.fillText(s,x,y);
 		
 		s = lv;
 		con.font = " 20px ";
-		x = w + 45;
+		x = SCREEN_W/2 -w/2 + 20;
 		con.fillStyle="skyblue";
 		con.fillText(s,x,y);
 		/*フィールドクリック（タップ）でブラウザリロード*/
