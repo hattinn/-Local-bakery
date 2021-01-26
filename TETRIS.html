@@ -24,7 +24,7 @@
                     <i class="fas fa-caret-right"></i></button>
             </div>
         </div>
-        <p>©musukosan</p>
+        <p id="p">©musukosan</p>
     </div>
     
 </section>
@@ -41,10 +41,21 @@
 
 
 <script>
+// キャンバスとコンテキストの取得
+let can = document.getElementById("can");
+let con = can.getContext("2d");
+
+
 // スマホ ⇔ PC表示切り替え
 let window_size = window.innerWidth;
-const wrap 			= document.getElementById('buttonwrap');
-if(window_size >= 601)wrap.classList.add('off');
+const WRAP 			= document.getElementById('buttonwrap');
+const CONTROL 	= document.getElementById('control');
+const P    			= document.getElementById('p');
+
+if(window_size >= 601)
+{WRAP.classList.add('off');P.classList.add('off');CONTROL.classList.add('off');
+ can.style.height = "94%";
+}
 
 
 //BGM,効果音
@@ -81,8 +92,9 @@ let gameSpeed = 1000;/* 初期値*/
 const FIELD_COL = 10;
 const FIELD_ROW = 14;
 
+
 //ブロック一つのサイズ(ピクセル)
-const BLOCK_SIZE = window_size/10 -1;
+const BLOCK_SIZE = window_size/10;
 
 //スクリーンサイズ
 const SCREEN_W = BLOCK_SIZE * FIELD_COL;
@@ -192,11 +204,6 @@ let field = [];
 //ゲームオーバーフラグ
 let over = false;
 
-// キャンバスとコンテキストの取得
-let can = document.getElementById("can");
-let con = can.getContext("2d");
-
-// can.style.border = "4px solid brown";
 
 // キャンバスサイズを設定
 can.width  = SCREEN_W;
@@ -288,47 +295,91 @@ function drawAll()
 	  overBgm.currentTime = 0;
 	  if(score>=50000){overBgm=overBgm1;}
 	  overBgm.play();
-	  /*スコア表示*/
-	  con.fillStyle = "rgba(33,33,33,0.6)";
-    con.fillRect(0,0,can.width, can.height);
-		let s="GAME OVER";
-		con.font = "50px 'ＭＳ ゴシック'";
-		let w = con.measureText(s).width;
-		let x = SCREEN_W/2 - w/2;
-		let y = SCREEN_H/2 - 140;
-		con.lineWidth = 4;
-		con.strokeText(s,x,y);
-		con.fillStyle="white";
-		con.fillText(s,x,y);
+	  
+	  if(window_size >= 601)
+		{
+				/*スコア表示PC*/
+			  con.fillStyle = "rgba(33,33,33,0.6)";
+		    con.fillRect(0,0,can.width, can.height);
+				let s="GAME OVER";
+				con.font = "200px 'ＭＳ ゴシック'";
+				let w = con.measureText(s).width;
+				let x = SCREEN_W/2 - w/2;
+				let y = SCREEN_H/2 - 340;
+				con.lineWidth = 4;
+				con.strokeText(s,x,y);
+				con.fillStyle="white";
+				con.fillText(s,x,y);
+				
+				// x = SCREEN_W/2 - w/2 -20;
+				// con.fillstyle = "#555";
+				// con.fillRect(x,y+90,270,225)
+				
+				s = "score";
+				con.font = " 150px 'ＭＳ ゴシック'";
+				w = con.measureText(s).width;
+				x = SCREEN_W/2 - w/2 - 50;
+				y = SCREEN_H/2 + 110;
+				con.fillStyle="white";
+				con.fillText(s,x,y);
+				
+				s = ""+score;
+				y = SCREEN_H/2 + 290;
+				con.fillStyle="#3c3";
+				con.fillText(s,x,y);
+				
+				s = "Lv:";
+				w = con.measureText(s).width;
+				y = SCREEN_H/2 + 550;
+				con.fillStyle="white";
+				con.fillText(s,x,y);
+				
+				s = lv;
+				con.font = " 20px ";
+				x = SCREEN_W/2 -w/2 + 130;
+				con.fillStyle="skyblue";
+				con.fillText(s,x,y);
+		}else{
+			  /*スコア表示sp*/
+			  con.fillStyle = "rgba(33,33,33,0.6)";
+		    con.fillRect(0,0,can.width, can.height);
+				let s="GAME OVER";
+				con.font = "50px 'ＭＳ ゴシック'";
+				let w = con.measureText(s).width;
+				let x = SCREEN_W/2 - w/2;
+				let y = SCREEN_H/2 - 140;
+				con.lineWidth = 4;
+				con.strokeText(s,x,y);
+				con.fillStyle="white";
+				con.fillText(s,x,y);
+				
+				s = "score";
+				con.font = " 15px ";
+				w = con.measureText(s).width;
+				x = SCREEN_W/2 - w/2 - 50;
+				y = SCREEN_H/2 + 10;
+				con.fillStyle="white";
+				con.fillText(s,x,y);
+				
+				s = ""+score;
+				y = SCREEN_H/2 + 70;
+				con.fillStyle="#3c3";
+				con.fillText(s,x,y);
+				
+				s = "Lv:";
+				w = con.measureText(s).width;
+				y = SCREEN_H/2 + 150;
+				con.fillStyle="white";
+				con.fillText(s,x,y);
+				
+				s = lv;
+				con.font = " 20px ";
+				x = SCREEN_W/2 -w/2 + 20;
+				con.fillStyle="skyblue";
+				con.fillText(s,x,y);
+		}
 		
-		// x = SCREEN_W/2 - w/2 -20;
-		// con.fillstyle = "#555";
-		// con.fillRect(x,y+90,270,225)
 		
-		s = "score";
-		con.font = " 15px ";
-		w = con.measureText(s).width;
-		x = SCREEN_W/2 - w/2 - 50;
-		y = SCREEN_H/2 + 10;
-		con.fillStyle="white";
-		con.fillText(s,x,y);
-		
-		s = ""+score;
-		y = SCREEN_H/2 + 70;
-		con.fillStyle="#3c3";
-		con.fillText(s,x,y);
-		
-		s = "Lv:";
-		w = con.measureText(s).width;
-		y = SCREEN_H/2 + 150;
-		con.fillStyle="white";
-		con.fillText(s,x,y);
-		
-		s = lv;
-		con.font = " 20px ";
-		x = SCREEN_W/2 -w/2 + 20;
-		con.fillStyle="skyblue";
-		con.fillText(s,x,y);
 		/*フィールドクリック（タップ）でブラウザリロード*/
 		can.onclick = function ()
 		{
