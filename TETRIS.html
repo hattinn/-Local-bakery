@@ -24,7 +24,9 @@
                     <i class="fas fa-caret-right"></i></button>
             </div>
         </div>
+        <p>©musukosan</p>
     </div>
+    
 </section>
 
 <audio id="bgm1" src="bgm1.mp3" autoplay></audio>
@@ -98,7 +100,7 @@ const TETRO_COLORS =[
 	"#66F",			//3青
 	"#C5C",			//4紫
 	"#FD2",			//5黄色
-	"#F44",			//6赤
+	"#d44",			//6赤
 	"#5B5",			//7緑
 	"#ddd",			//8灰色
 	"pink",			//9ピンク
@@ -293,7 +295,7 @@ function drawAll()
 		con.font = "50px 'ＭＳ ゴシック'";
 		let w = con.measureText(s).width;
 		let x = SCREEN_W/2 - w/2;
-		let y = SCREEN_H/2 - 70;
+		let y = SCREEN_H/2 - 140;
 		con.lineWidth = 4;
 		con.strokeText(s,x,y);
 		con.fillStyle="white";
@@ -307,18 +309,18 @@ function drawAll()
 		con.font = " 15px ";
 		w = con.measureText(s).width;
 		x = SCREEN_W/2 - w/2 - 50;
-		y = SCREEN_H/2 + 80;
+		y = SCREEN_H/2 + 10;
 		con.fillStyle="white";
 		con.fillText(s,x,y);
 		
 		s = ""+score;
-		y = SCREEN_H/2 + 140;
+		y = SCREEN_H/2 + 70;
 		con.fillStyle="#3c3";
 		con.fillText(s,x,y);
 		
 		s = "Lv:";
 		w = con.measureText(s).width;
-		y = SCREEN_H/2 + 220;
+		y = SCREEN_H/2 + 150;
 		con.fillStyle="white";
 		con.fillText(s,x,y);
 		
