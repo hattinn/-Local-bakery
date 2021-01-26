@@ -15,10 +15,6 @@ body{margin:0;padding:0;}
 .bgi3{background: url(bgi3.png) center/cover;}
 .bgi4{background: url(bgi4.jpg) center/cover;}
 
-
-.can{
-	border: 1.5vw solid #c87bd6;
-	width: 97vw;}
 .can-wrapper
 {
 width:100vw;
@@ -26,6 +22,12 @@ height: 100vh;
 margin:0 auto;
 /*border: 8px solid #9b5726;*/
 }
+.can{
+	border: 1.5vw solid #c87bd6;
+	width: 97vw;
+	height: 83vh;
+	}
+	
 .control
     {
         height: 14vh;
