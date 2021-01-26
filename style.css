@@ -5,11 +5,11 @@
 -moz-box-sizing: border-box;
 box-sizing: border-box;}
 
-body{margin:0;padding:0;}
-.can{
+body{height: 100vh;margin:0;padding:0;}
+/*.can{*/
     /*width: 100%;*/
     /*border: 9px solid #9b5726;*/
-    }
+/*    }*/
 .bgi1{background: url(bgi1.png) center/cover;}
 .bgi2{background: url(bgi2.png) center/cover;}
 .bgi3{background: url(bgi3.png) center/cover;}
@@ -18,14 +18,14 @@ body{margin:0;padding:0;}
 .can-wrapper
 {
 width:100vw;
-height: 92vh;
+height: 92%;
 margin:0 auto;
 /*border: 8px solid #9b5726;*/
 }
 .can{
 	border: 1.5vw solid #c87bd6;
 	width: 97vw;
-	height: 75vh;
+	height: 75%;
 	}
 	
 .control
