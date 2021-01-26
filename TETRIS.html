@@ -49,12 +49,11 @@ if(window_size >= 601)wrap.classList.add('off');
 let bgm1 		 = document.getElementById("bgm1");
 let bgm2 		 = document.getElementById("bgm2");
 let bgm3 		 = document.getElementById("bgm3");
-let bgm  		 = bgm1;   /*BGM初期値*/
-// var bgmFlags = [0,0,0];/*BGMフラグ初期値*/
+let bgm  		 = bgm1;/*BGM初期値*/
 
-let se1  		 = document.getElementById("se1");  /*衝突*/
-let se2  		 = document.getElementById("se2");  /*ライン消去*/
-let se3  		 = document.getElementById("se3");  /*回転*/
+let se1  		 = document.getElementById("se1");/*衝突*/
+let se2  		 = document.getElementById("se2");/*ライン消去*/
+let se3  		 = document.getElementById("se3");/*回転*/
 
 let overBgm1 = document.getElementById("over1");
 let overBgm2 = document.getElementById("over2");
@@ -65,8 +64,10 @@ bgm3.volume  		= 0.3;
 se3.volume 			= 0.5;
 overBgm1.volume = 0.5;
 overBgm2.volume = 0.7;
+
+
 // スコア
-let lv    = 0;
+let lv    = 0;/*ゲームレベル*/
 let lvb   = 1;/*レベルボーナス*/
 let linec = 0;/*消したライン数*/
 let score = 0;/*トータルスコア*/
@@ -88,6 +89,7 @@ const SCREEN_H = BLOCK_SIZE * FIELD_ROW;
 //テトロミノのサイズ
 const TETRO_SIZE =4;
 
+//テトロミノの色
 const TETRO_COLORS =[
 	"#000",			//0空
 	"#6CF",			//1水色
@@ -96,52 +98,74 @@ const TETRO_COLORS =[
 	"#C5C",			//4紫
 	"#FD2",			//5黄色
 	"#F44",			//6赤
-	"#5B5"			//7緑
+	"#5B5",			//7緑
+	"#ddd",			//8灰色
+	"pink",			//9ピンク
+	"#444"			//9黒
 ];
 
+//テトロミノ本体
 const TETRO_TYPES = [
-	[],	// 0.空っぽ
+	[],								/*0.空っぽ*/
 	
-	[					// 1.I
+	[									// 1.I
 		[ 0, 0, 0, 0 ],
 		[ 1, 1, 1, 1 ],
 		[ 0, 0, 0, 0 ],
 		[ 0, 0, 0, 0 ]
 	],
-	[					// 2.L
+	[									// 2.L
 		[ 0, 1, 0, 0 ],
 		[ 0, 1, 0, 0 ],
 		[ 0, 1, 1, 0 ],
 		[ 0, 0, 0, 0 ]
 	],
-	[					// 3.J
+	[									// 3.J
 		[ 0, 0, 1, 0 ],
 		[ 0, 0, 1, 0 ],
 		[ 0, 1, 1, 0 ],
 		[ 0, 0, 0, 0 ]
 	],
-	[					// 4.T
+	[									// 4.T
 		[ 0, 1, 0, 0 ],
 		[ 0, 1, 1, 0 ],
 		[ 0, 1, 0, 0 ],
 		[ 0, 0, 0, 0 ]
 	],
-	[					// 5.O
+	[									// 5.O
 		[ 0, 0, 0, 0 ],
 		[ 0, 1, 1, 0 ],
 		[ 0, 1, 1, 0 ],
 		[ 0, 0, 0, 0 ]
 	],
-	[					// 6.Z
+	[									// 6.Z
 		[ 0, 0, 0, 0 ],
 		[ 1, 1, 0, 0 ],
 		[ 0, 1, 1, 0 ],
 		[ 0, 0, 0, 0 ]
 	],
-	[					// 7.S
+	[									// 7.S
 		[ 0, 0, 0, 0 ],
 		[ 0, 1, 1, 0 ],
 		[ 1, 1, 0, 0 ],
+		[ 0, 0, 0, 0 ]
+	],
+		[								// 8.くの字
+		[ 0, 0, 0, 0 ],
+		[ 0, 1, 1, 0 ],
+		[ 0, 1, 0, 0 ],
+		[ 0, 0, 0, 0 ]
+	],
+		[								// 9.ドット
+		[ 0, 0, 0, 0 ],
+		[ 0, 1, 0, 0 ],
+		[ 0, 0, 0, 0 ],
+		[ 0, 0, 0, 0 ]
+	],
+	[									// 10.big
+		[ 1, 1, 1, 1 ],
+		[ 1, 1, 1, 1 ],
+		[ 1, 1, 1, 1 ],
 		[ 0, 0, 0, 0 ]
 	]
 ];
@@ -257,7 +281,7 @@ function drawAll()
 	  overBgm.currentTime = 0;
 	  if(score>=50000){overBgm=overBgm1;}
 	  overBgm.play();
-	   
+	  /*スコア表示*/
 	  con.fillStyle = "rgba(33,33,33,0.6)";
     con.fillRect(0,0,can.width, can.height);
 		let s="GAME OVER";
@@ -279,21 +303,17 @@ function drawAll()
 		w = con.measureText(s).width;
 		x = SCREEN_W/2 - w/2 - 50;
 		y = SCREEN_H/2 + 80;
-// 		con.lineWidth = 1;
-// 		con.strokeText(s,x,y);
 		con.fillStyle="gray";
 		con.fillText(s,x,y);
 		
 		s = ""+score;
 		y = SCREEN_H/2 + 140;
-// 		con.strokeText(s,x,y);
 		con.fillStyle="#3c3";
 		con.fillText(s,x,y);
 		
 		s = "Lv:";
 		w = con.measureText(s).width;
 		y = SCREEN_H/2 + 220;
-// 		con.strokeText(s,x,y);
 		con.fillStyle="gray";
 		con.fillText(s,x,y);
 		
@@ -302,7 +322,7 @@ function drawAll()
 		x = w + 45;
 		con.fillStyle="skyblue";
 		con.fillText(s,x,y);
-		
+		/*フィールドクリック（タップ）でブラウザリロード*/
 		can.onclick = function ()
 		{
 		 		document.location.reload();
@@ -480,8 +500,7 @@ function dropTetro()
 if(window_size<=600)
 {
     // スマホ操作設定
-    let tapCount = 0 ;
-    
+    let tapCount = 0 ;/*ダブルタップ判定のためのカウント*/
     let tapLeft   = document.getElementById( "left"   );
     let tapRight  = document.getElementById( "right"  );
     let tapDown   = document.getElementById( "down"   );
@@ -514,18 +533,18 @@ if(window_size<=600)
         e.preventDefault();
         bgm.play();
     		if(over)return;
+    		// ダブルタップ判定
         if( !tapCount )
             	{
             		++tapCount ;
+            		
                 if( checkMove(  0, 1 ) )tetro_y++;
             		setTimeout( function() {
             			tapCount = 0 ;
             		}, 350) ;
-            
-            	// ダブルタップ判定
+            	
             	} else {
             			while( checkMove(  0, 1 ) )tetro_y++;
-            		
             			tapCount = 0 ;
             	}
         drawAll();
@@ -551,7 +570,6 @@ if(window_size<=600)
 document.onkeydown = function(e)
 {
 	bgm.play();
-	
 	if(over)return;
 	
 	switch( e.keyCode )
