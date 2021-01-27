@@ -30,8 +30,8 @@ height: 100%;
     {
         height: 10%;
         width: 97%;
-        /*padding-top: 1%;*/
-        /*padding-bottom: 1.5%;*/
+        padding-top: 1%;
+        padding-bottom: 1.5%;
         margin-top: -1.5%;
         background-color: #9b5726;
         border: 1.5vw dashed #a2360f;
