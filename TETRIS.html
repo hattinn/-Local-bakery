@@ -48,8 +48,17 @@ let con = can.getContext("2d");
 
 
 // スマホ ⇔ PC表示切り替え
-let window_W = window.innerWidth;
-let window_H = window.innerHeight;
+let windowAll_H  = window.parent.screen.height;
+let window_W     = window.innerWidth;
+let window_H     = window.innerHeight;
+window.addEventListener("resize", function()
+{
+	let window_W     = window.innerWidth;
+	let window_H     = window.innerHeight;
+	document.getElementById('body').style.height=window_H+'px';
+	document.getElementById('body').style.width =window_W+'px';
+	
+});
 document.getElementById('body').style.height=window_H+'px';
 document.getElementById('body').style.width =window_W+'px';
 
