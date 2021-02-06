@@ -57,12 +57,10 @@ window.addEventListener("resize", function()
 	let window_H     = window.innerHeight;
 	document.getElementById('body').style.height=window_H+'px';
 	document.getElementById('body').style.width =window_W+'px';
-	window.scrollTo(0,window_H + 100);
 	window.scrollTo(0,window_H);
 });
 document.getElementById('body').style.height=window_H+'px';
 document.getElementById('body').style.width =window_W+'px';
-window.scrollTo(0,window_H + 100);
 window.scrollTo(0,0);
 
 const WRAP 			= document.getElementById('buttonwrap');
@@ -106,7 +104,7 @@ let gameSpeed = 1000;/* 初期値*/
 
 //フィールドサイズ
 const FIELD_COL = 10;
-const FIELD_ROW = 14;
+const FIELD_ROW = 20;
 
 
 //ブロック一つのサイズ(ピクセル)
