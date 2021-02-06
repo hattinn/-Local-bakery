@@ -1,661 +1,109 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>キクちゃんテトリス</title>
-    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="android-touch-icon.jpg" sizes="192x192">
-</head>
-<body>
-<section>
-    <div class="can-wrapper">
-        <canvas id="can" class="can bgi1"></canvas>
-        <div id="control" class="control">
-            <div id="buttonwrap" class="buttonwrap">
-                <button id="left" class="left" >
-                    <i class="fas fa-caret-left" ></i></button>
-                <button id="rotate" class="rotate ">
-                    <i class="fas fa-redo-alt"></i></button>
-                <button id="down" class="down">
-                    <i class="fas fa-sort-down"></i></button>
-                <button id="right" class="right">
-                    <i class="fas fa-caret-right"></i></button>
-            </div>
-        </div>
-        <!--<p id="p">©musukosan</p>-->
-    </div>
+@charset "utf-8";
+
+*::before,*::after{
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;}
+
+body{height: 100vh;width: 100vw;margin:0 auto;padding:0;overflow: hidden;}
+section{height: 100%;width: 100%;background-color: #4a1505;}
+p{text-align: center;}
+.bgi1{background: url(bgi1.png) center/cover;}
+.bgi2{background: url(bgi2.png) center/cover;}
+.bgi3{background: url(bgi3.png) center/cover;}
+.bgi4{background: url(bgi4.jpg) center/cover;}
+
+.can-wrapper
+{
+width:100%;
+height: 100%;
+
+/*margin:0 auto;*/
+/*border: 8px solid #9b5726;*/
+}
+.can{
+	border: 1.5vw solid #b38e44;
+	max-height: 80vh;
+	width: 100%;max-width: 97vw;
+	}
+	
+.control
+    {
+        /*height: 10%;*/
+        max-height: 20vh;
+        /*min-height: 20vh;*/
+        height: 100%;
+        width: 100%;
+        max-width: 97vw;
+        padding-top: 1%;
+        padding-bottom: 1.5%;
+        margin-top: -1.5%;
+        background-color: #9b5726;
+        border: 1.5vw dashed #a2360f;
+    }
+.buttonwrap
+    {
+    		width: 100%;
+    		height: 70%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        /*vertical-align: middle;*/
+    }
+.control button
+    {
+    /*position: relative;*/
+    background-color: #fff884;
+    height: 100%;
+    width:  20%;
+    -webkit-box-shadow: 0px 5px 0px -1px rgb(134 40 11);
+    -moz-box-shadow: 0px 5px 0px -1px rgb(134 40 11);
+    box-shadow: 0px 5px 0px -1px rgb(134 40 11);
+    }
+.left{position: relative;}
+.right{position: relative;}
+.down{position: relative;}
+
+.fas
+    {font-size: 70px;
+    color: #ad5928;}
+.fa-caret-left
+    {
+    position: absolute;
+    /*top:-10%;*/
+    /*left:22%*/
+    top: 51%;
+		left: 42%;
+		transform: translate(-50%, -50%);
+		}
+.fa-caret-right
+    {
+    position: absolute;
+    /*top:-10%;*/
+    /*left:38%*/
+    top: 51%;
+		left: 58%;
+		transform: translate(-50%, -50%);
+    }
+.fa-sort-down
+    {
+   	position: absolute;
+    /*top:-26%;*/
+    /*left:13%;*/
+    top: 36%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+    }
+.fa-redo-alt
+    {
+        padding-top: 7%;
+        font-size: 38px;
+    }
     
-</section>
-
-<audio id="bgm1" src="bgm1.mp3" autoplay></audio>
-<audio id="bgm2" src="bgm2.mp3" ></audio>
-<audio id="bgm3" src="bgm3.mp3" ></audio>
-<audio id="se1" src="se1.mp3"></audio>
-<audio id="se2" src="se2.mp3"></audio>
-<audio id="se3" src="se3.mp3"></audio>
-<audio id="over1" src="over1.mp3"></audio>
-<audio id="over2" src="over2.mp3"></audio>
-<!--<audio id="chanchan" src="chanchan.mp3"></audio>-->
-
-
-<script>
-// キャンバスとコンテキストの取得
-let can = document.getElementById("can");
-let con = can.getContext("2d");
-
-
-// スマホ ⇔ PC表示切り替え
-let window_size = window.innerWidth;
-const WRAP 			= document.getElementById('buttonwrap');
-const CONTROL 	= document.getElementById('control');
-
-if(window_size >= 601)
-{WRAP.classList.add('off');CONTROL.classList.add('off');
- can.style.height = "94%";
+/*PC*/
+@media screen and (min-width:601px){
+    .can-wrapper{max-width:500px;margin:0 auto;}
+    .off{display: none;}
 }
 
 
-//BGM,効果音
-let bgm1 		 = document.getElementById("bgm1");
-let bgm2 		 = document.getElementById("bgm2");
-let bgm3 		 = document.getElementById("bgm3");
-let bgm  		 = bgm1;/*BGM初期値*/
-
-let se1  		 = document.getElementById("se1");/*衝突*/
-let se2  		 = document.getElementById("se2");/*ライン消去*/
-let se3  		 = document.getElementById("se3");/*回転*/
-
-let overBgm1 = document.getElementById("over1");
-let overBgm2 = document.getElementById("over2");
-let overBgm  = overBgm2;/*ゲームオーバー音の初期値*/
-
-bgm2.volume  		= 0.3;
-bgm3.volume  		= 0.3;
-se3.volume 			= 0.5;
-overBgm1.volume = 0.5;
-overBgm2.volume = 0.7;
-
-
-// スコア
-let lv    = 0;/*ゲームレベル*/
-let lvb   = 1;/*レベルボーナス*/
-let linec = 0;/*消したライン数*/
-let score = 0;/*トータルスコア*/
-
-//落ちるスピード
-let gameSpeed = 1000;/* 初期値*/
-
-//フィールドサイズ
-const FIELD_COL = 10;
-const FIELD_ROW = 14;
-
-
-//ブロック一つのサイズ(ピクセル)
-const BLOCK_SIZE = window_size/10;
-
-//スクリーンサイズ
-const SCREEN_W = BLOCK_SIZE * FIELD_COL;
-const SCREEN_H = BLOCK_SIZE * FIELD_ROW;
-
-
-//テトロミノのサイズ
-const TETRO_SIZE =4;
-
-//テトロミノの色
-const TETRO_COLORS =[
-	"#000",			//0空
-	"#6CF",			//1水色
-	"#F92",			//2オレンジ
-	"#66F",			//3青
-	"#C5C",			//4紫
-	"#FD2",			//5黄色
-	"#d44",			//6赤
-	"#5B5",			//7緑
-	"#ddd",			//8灰色
-	"pink",			//9ピンク
-	"#444"			//9黒
-];
-
-//テトロミノの種類
-const TETRO_TYPES = [
-	[],								/*0.空っぽ*/
-	
-	[									// 1.I
-		[ 0, 0, 0, 0 ],
-		[ 1, 1, 1, 1 ],
-		[ 0, 0, 0, 0 ],
-		[ 0, 0, 0, 0 ]
-	],
-	[									// 2.L
-		[ 0, 1, 0, 0 ],
-		[ 0, 1, 0, 0 ],
-		[ 0, 1, 1, 0 ],
-		[ 0, 0, 0, 0 ]
-	],
-	[									// 3.J
-		[ 0, 0, 1, 0 ],
-		[ 0, 0, 1, 0 ],
-		[ 0, 1, 1, 0 ],
-		[ 0, 0, 0, 0 ]
-	],
-	[									// 4.T
-		[ 0, 1, 0, 0 ],
-		[ 0, 1, 1, 0 ],
-		[ 0, 1, 0, 0 ],
-		[ 0, 0, 0, 0 ]
-	],
-	[									// 5.O
-		[ 0, 0, 0, 0 ],
-		[ 0, 1, 1, 0 ],
-		[ 0, 1, 1, 0 ],
-		[ 0, 0, 0, 0 ]
-	],
-	[									// 6.Z
-		[ 0, 0, 0, 0 ],
-		[ 1, 1, 0, 0 ],
-		[ 0, 1, 1, 0 ],
-		[ 0, 0, 0, 0 ]
-	],
-	[									// 7.S
-		[ 0, 0, 0, 0 ],
-		[ 0, 1, 1, 0 ],
-		[ 1, 1, 0, 0 ],
-		[ 0, 0, 0, 0 ]
-	],
-		[								// 8.くの字
-		[ 0, 0, 0, 0 ],
-		[ 0, 1, 1, 0 ],
-		[ 0, 1, 0, 0 ],
-		[ 0, 0, 0, 0 ]
-	],
-		[								// 9.ドット
-		[ 0, 0, 0, 0 ],
-		[ 0, 1, 0, 0 ],
-		[ 0, 0, 0, 0 ],
-		[ 0, 0, 0, 0 ]
-	],
-	[									// 10.黒
-		[ 0, 0, 0, 0 ],
-		[ 0, 1, 0, 0 ],
-		[ 0, 0, 1, 0 ],
-		[ 0, 0, 0, 0 ]
-	]
-];
-
-//初期位置
-const START_X = FIELD_COL/2 - TETRO_SIZE/2;
-const START_Y = 0;
-
-//テトロミノ本体
-let tetro;
-//テトロミノの形
-let tetro_t;
-
-//テトロミノの座標
-let tetro_x = START_X;
-let tetro_y = START_Y;
-
-//フィールド本体
-let field = [];
-
-//ゲームオーバーフラグ
-let over = false;
-
-
-// キャンバスサイズを設定
-can.width  = SCREEN_W;
-can.height = SCREEN_H;
-
-// テトロのタイプをランダム取得、設定
-tetro_t = Math.floor( Math.random()*(TETRO_TYPES.length-1) )+1;
-tetro = TETRO_TYPES[ tetro_t ];
-
-
-// //背景画像を生成
-// var bgimg = new Image();
-// bgimg.src = "bgi1.png";
-
-// //画像をcanvasに設定
-// bgimg.onload = function(){
-// con.drawImage(bgimg, 0, 0, 300, 600);  //300x600に縮小表示
-// }
-
-init();
-drawAll();
-setInterval( dropTetro, gameSpeed );
-
-
-//初期化
-function init()
-{
-	//フィールドを準備して全座標に0を入れる
-	for(let y=0; y<FIELD_ROW ; y++ )
-	{
-		field[y] = [];/*２次元配列化*/
-		
-		for(let x=0; x<FIELD_COL ; x++ )
-		{
-			field[y][x] =0;
-		}
-	}
-	/*
-	テスト
-	field[5][8]  = 1;
-	*/
-}
-
-//ブロック一つを描画
-function drawBlock(x,y,c)
-{
-	let px = x * BLOCK_SIZE;/*プリントするx*/
-	let py = y * BLOCK_SIZE;/*プリントするy*/
-	con.fillStyle=TETRO_COLORS[c];/*テトロごとに設定された色*/
-	con.fillRect(px,py,BLOCK_SIZE,BLOCK_SIZE);
-	con.strokeStyle="black";
-	con.strokeRect(px,py,BLOCK_SIZE,BLOCK_SIZE);
-}
-
-//全部描画
-function drawAll()
-{
-	con.clearRect(0,0,SCREEN_W,SCREEN_H);/*全描画をクリア*/
-	
-	/*フィールド上のブロックの描画*/
-	for(let y=0; y<FIELD_ROW ; y++ )
-	{
-		for(let x=0; x<FIELD_COL ; x++ )
-		{
-			if( field[y][x] )/*0以外なら描画*/
-			{
-				drawBlock(x,y,field[y][x]);/*x座標,y座標,テトロタイプの色*/
-			}
-		}
-	}
-	/*テトロ本体（操作中）の描画*/
-	for(let y=0; y<TETRO_SIZE ; y++ )
-	{
-		for(let x=0; x<TETRO_SIZE ; x++ )
-		{
-			if( tetro[y][x] )/*テトロ本体の形*/
-			{
-				drawBlock(tetro_x+x, tetro_y+y,tetro_t);
-			}
-		}
-	}
-	
-	if(over)
-	{
-	    // chanchan.play();
-	    
-	  bgm.currentTime = 0;
-	  bgm.pause();
-	  overBgm.currentTime = 0;
-	  if(score>=50000){overBgm=overBgm1;}
-	  overBgm.play();
-	  
-	  if(window_size >= 601)
-		{
-				/*スコア表示PC*/
-			  con.fillStyle = "rgba(33,33,33,0.6)";
-		    con.fillRect(0,0,can.width, can.height);
-				let s="GAME OVER";
-				con.font = "200px 'ＭＳ ゴシック'";
-				let w = con.measureText(s).width;
-				let x = SCREEN_W/2 - w/2;
-				let y = SCREEN_H/2 - 340;
-				con.lineWidth = 4;
-				con.strokeText(s,x,y);
-				con.fillStyle="white";
-				con.fillText(s,x,y);
-				
-				// x = SCREEN_W/2 - w/2 -20;
-				// con.fillstyle = "#555";
-				// con.fillRect(x,y+90,270,225)
-				
-				s = "score";
-				con.font = " 150px 'ＭＳ ゴシック'";
-				w = con.measureText(s).width;
-				x = SCREEN_W/2 - w/2 - 50;
-				y = SCREEN_H/2 + 110;
-				con.fillStyle="white";
-				con.fillText(s,x,y);
-				
-				s = ""+score;
-				y = SCREEN_H/2 + 290;
-				con.fillStyle="#3c3";
-				con.fillText(s,x,y);
-				
-				s = "Lv:";
-				w = con.measureText(s).width;
-				y = SCREEN_H/2 + 550;
-				con.fillStyle="white";
-				con.fillText(s,x,y);
-				
-				s = lv;
-				con.font = " 20px ";
-				x = SCREEN_W/2 -w/2 + 130;
-				con.fillStyle="skyblue";
-				con.fillText(s,x,y);
-		}else{
-			  /*スコア表示sp*/
-			  con.fillStyle = "rgba(33,33,33,0.6)";
-		    con.fillRect(0,0,can.width, can.height);
-				let s="GAME OVER";
-				con.font = "50px 'ＭＳ ゴシック'";
-				let w = con.measureText(s).width;
-				let x = SCREEN_W/2 - w/2;
-				let y = SCREEN_H/2 - 140;
-				con.lineWidth = 4;
-				con.strokeText(s,x,y);
-				con.fillStyle="white";
-				con.fillText(s,x,y);
-				
-				s = "score";
-				con.font = " 15px ";
-				w = con.measureText(s).width;
-				x = SCREEN_W/2 - w/2 - 50;
-				y = SCREEN_H/2 + 10;
-				con.fillStyle="white";
-				con.fillText(s,x,y);
-				
-				s = ""+score;
-				y = SCREEN_H/2 + 70;
-				con.fillStyle="#3c3";
-				con.fillText(s,x,y);
-				
-				s = "Lv:";
-				w = con.measureText(s).width;
-				y = SCREEN_H/2 + 150;
-				con.fillStyle="white";
-				con.fillText(s,x,y);
-				
-				s = lv;
-				con.font = " 20px ";
-				x = SCREEN_W/2 -w/2 + 20;
-				con.fillStyle="skyblue";
-				con.fillText(s,x,y);
-		}
-		
-		
-		/*フィールドクリック（タップ）でブラウザリロード*/
-		can.onclick = function ()
-		{
-		 		document.location.reload();
-		}
-	}
-}
-
-// ブロックの衝突判定
-function checkMove( mx,my ,ntetro)
-{
-	if( ntetro == undefined ) ntetro = tetro;
-	
-	for(let y=0; y<TETRO_SIZE ; y++ )
-	{
-		for(let x=0; x<TETRO_SIZE ; x++ )
-		{
-			if(  ntetro[y][x]  )
-			{
-				let nx = tetro_x + mx + x;
-				let ny = tetro_y + my + y;
-				
-				if( ny < 0 ||
-					nx < 0 ||
-					ny >= FIELD_ROW ||
-					nx >= FIELD_COL ||
-					field[ny][nx] )
-				{
-					return false;
-				}
-			}
-		}
-	}
-	return true;
-}
-
-// テトロの回転
-function rotate()
-{
-	let ntetro = [];
-	
-	for(let y=0; y<TETRO_SIZE ; y++ )
-	{
-		ntetro[y]=[];
-		for(let x=0; x<TETRO_SIZE ; x++ )
-		{
-			ntetro[y][x] = tetro[TETRO_SIZE-x-1][y];
-		}
-	}
-	return ntetro;
-}
-
-//テトロを固定する
-function fixTetro()
-{
-	for(let y=0; y<TETRO_SIZE ; y++ )
-	{
-		for(let x=0; x<TETRO_SIZE ; x++ )
-		{
-			if( tetro[y][x] )
-			{
-				field[tetro_y + y][tetro_x + x] = tetro_t;
-				se1.currentTime = 0;
-				se1.play();
-			}
-		}
-	}
-}
-
-//ラインが揃ったかチェックして消す
-function checkLine()
-{
-	for(let y=0; y<FIELD_ROW ; y++ )
-	{
-		let flag=true;
-		
-		for(let x=0; x<FIELD_COL ; x++ )
-		{
-			if( !field[y][x] )
-			{
-				flag=false;
-				break;
-			}
-		}
-			
-		/*ラインが消えたら*/
-		if(flag)
-		{
-			linec++;
-			score = linec * ( lvb * 1000);
-			se2.currentTime = 0;
-			se2.play();
-			
-			/*消したライン数(合計)が４ごとに*/
-			if( linec % 4 == 0 )
-			{
-			    lv++;													/*レベルアップ*/
-			    lvb = 1 + ( 0.1 * lv );				/*スコア補正をプラス*/
-			    gameSpeed = gameSpeed - 50;		/*ゲームスピードアップ*/
-			    if(gameSpeed<=0)gameSpeed = 1;/*ゲームスピード上限*/
-			    
-					/*レベルを条件にBGMと背景更新*/
-					if(lv == 3 || lv == 14)
-					{		bgm.pause();
-							bgm.currentTime =0;
-					    bgm = bgm3;
-					    overBgm.play();
-					    can.classList.remove('bgi1');
-					    can.classList.remove('bgi4');
-					    can.classList.add('bgi2');
-					    
-					}else if(lv == 6 || lv == 20)
-					{		bgm.pause();
-							bgm.currentTime =0;
-					    bgm = bgm1;
-					    overBgm.play();
-					    can.classList.remove('bgi2');
-					    can.classList.add('bgi3');
-					    
-					}else if(lv == 10 || lv == 27)
-					{		bgm.pause();
-							bgm.currentTime =0;
-					    bgm = bgm2;
-					    overBgm.play();
-					    can.classList.remove('bgi3');
-					    can.classList.add('bgi4');
-					    
-					}else if(lv >= 35)
-					{		bgm.pause();
-							bgm.currentTime =0;
-					    bgm = bgm1;
-					    overBgm.play();
-					    can.classList.remove('bgi4');
-					    can.classList.add('bgi1');
-					    
-					}
-					
-			}
-			
-			for(let ny = y; ny>0 ;ny-- )
-			{
-				for(let nx=0;nx<FIELD_COL ; nx++)
-				{
-					field[ny][nx] = field[ny-1][nx];
-				}
-			}
-			
-		}
-	}
-}
-
-// ブロックの落ちる処理
-function dropTetro()
-{
-	if(over)return;
-	
-	if( checkMove(  0, 1 ) )tetro_y++;
-	else
-	{
-		fixTetro();
-		checkLine();
-		tetro_t = Math.floor( Math.random()*(TETRO_TYPES.length-1) )+1;
-		tetro = TETRO_TYPES[ tetro_t ];
-		tetro_x = START_X;
-		tetro_y = START_Y;
-		
-		if( !checkMove(0,0) )
-		{
-			over=true;
-		}
-	}
-	drawAll();
-}
-
-// スマホ
-if(window_size<=600)
-{
-    // スマホ操作設定
-    let tapCount = 0 ;/*ダブルタップ判定のためのカウント*/
-    let tapLeft   = document.getElementById( "left"   );
-    let tapRight  = document.getElementById( "right"  );
-    let tapDown   = document.getElementById( "down"   );
-    let tapRotate = document.getElementById( "rotate" );
-    
-    tapLeft.addEventListener(  "touchstart", touchLeft  ,{passive:false},{once:true});
-    tapRight.addEventListener( "touchstart", touchRight ,{passive:false},{once:true});
-    tapDown.addEventListener(  "touchstart", touchDown  ,{passive:false},{once:true});
-    tapRotate.addEventListener("touchstart", touchRotate,{passive:false},{once:true});
- 
-    // タップ時の処理
-    function touchLeft(e)
-    {
-        e.preventDefault();
-        bgm.play();
-    		if(over)return;
-        if( checkMove( -1, 0 ) ){tetro_x--;}
-        drawAll();
-    }
-    function touchRight(e)
-    {
-        e.preventDefault();
-        bgm.play();
-    		if(over)return;
-        if( checkMove(  1, 0 ) )tetro_x++;
-        drawAll();
-    }
-    function touchDown(e)
-    {
-        e.preventDefault();
-        bgm.play();
-    		if(over)return;
-    		// ダブルタップ判定
-        if( !tapCount )
-            	{
-            		++tapCount ;
-            		
-                if( checkMove(  0, 1 ) )tetro_y++;
-            		setTimeout( function() {
-            			tapCount = 0 ;
-            		}, 350) ;
-            	
-            	} else {
-            			while( checkMove(  0, 1 ) )tetro_y++;
-            			tapCount = 0 ;
-            	}
-        drawAll();
-    }
-    function touchRotate(e)
-    {
-        e.preventDefault();
-        bgm.play();
-    		if(over)return;
-        
-        let ntetro = rotate();
-    		if( checkMove( 0, 0, ntetro) )
-	    	{
-	    	    tetro = ntetro;
-	    	    se3.currentTime = 0;
-	    	    se3.play();
-	    	}
-    	drawAll();
-    }
-}
-
-//キーボードが押された時の処理
-document.onkeydown = function(e)
-{
-	bgm.play();
-	if(over)return;
-	
-	switch( e.keyCode )
-	{
-		case 37:// 左
-			if( checkMove( -1, 0 ) )tetro_x--;
-			break;
-		case 38:// 上キー入力で一気に下まで
-			while( checkMove(  0, 1 ) )tetro_y++;
-			break;
-		case 39:// 右
-			if( checkMove(  1, 0 ) )tetro_x++;
-			break;
-		case 40:// 下
-			if( checkMove(  0, 1 ) )tetro_y++;
-			break;
-		case 32:// スペース
-			let ntetro = rotate();
-			if( checkMove( 0, 0, ntetro) )
-			{
-			    tetro = ntetro;
-			    se3.currentTime = 0;
-			    se3.play();
-			    break;
-			}
-	}
-	drawAll();
-}
-</script>
-</body>
-</html>
