@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="android-touch-icon.jpg" sizes="192x192">
 </head>
-<body>
-<section>
+<body id ="body" >
+<!--<section>-->
     <div class="can-wrapper">
         <canvas id="can" class="can bgi1"></canvas>
         <div id="control" class="control">
@@ -28,7 +28,7 @@
         <!--<p id="p">©musukosan</p>-->
     </div>
     
-</section>
+<!--</section>-->
 
 <audio id="bgm1" src="bgm1.mp3" autoplay></audio>
 <audio id="bgm2" src="bgm2.mp3" ></audio>
@@ -49,12 +49,15 @@ let con = can.getContext("2d");
 
 // スマホ ⇔ PC表示切り替え
 let window_size = window.innerWidth;
+document.getElementById('body').style.height=window_size+'px';
+
+
 const WRAP 			= document.getElementById('buttonwrap');
 const CONTROL 	= document.getElementById('control');
 
 if(window_size >= 601)
 {WRAP.classList.add('off');CONTROL.classList.add('off');
- can.style.height = "94%";
+ //can.style.height = "94%";
 }
 
 
