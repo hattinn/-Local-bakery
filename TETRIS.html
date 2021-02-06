@@ -53,16 +53,17 @@ let window_W     = window.innerWidth;
 let window_H     = window.innerHeight;
 window.addEventListener("resize", function()
 {
-	window.scrollTo(0,window_H);
 	let window_W     = window.innerWidth;
 	let window_H     = window.innerHeight;
 	document.getElementById('body').style.height=window_H+'px';
 	document.getElementById('body').style.width =window_W+'px';
-	
+	window.scrollTo(0,window_H + 100);
+	window.scrollTo(0,window_H);
 });
 document.getElementById('body').style.height=window_H+'px';
 document.getElementById('body').style.width =window_W+'px';
-window.scrollTo(0,window_H);
+window.scrollTo(0,window_H + 100);
+window.scrollTo(0,0);
 
 const WRAP 			= document.getElementById('buttonwrap');
 const CONTROL 	= document.getElementById('control');
