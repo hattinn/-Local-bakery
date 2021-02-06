@@ -48,14 +48,16 @@ let con = can.getContext("2d");
 
 
 // スマホ ⇔ PC表示切り替え
-let window_size = window.innerWidth;
-document.getElementById('body').style.height=window_size+'px';
+let window_W = window.innerWidth;
+let window_H = window.innerHeight;
+document.getElementById('body').style.height=window_H+'px';
+document.getElementById('body').style.width =window_W+'px';
 
 
 const WRAP 			= document.getElementById('buttonwrap');
 const CONTROL 	= document.getElementById('control');
 
-if(window_size >= 601)
+if(window_W >= 601)
 {WRAP.classList.add('off');CONTROL.classList.add('off');
  //can.style.height = "94%";
 }
@@ -97,7 +99,7 @@ const FIELD_ROW = 14;
 
 
 //ブロック一つのサイズ(ピクセル)
-const BLOCK_SIZE = window_size/10;
+const BLOCK_SIZE = window_W/10;
 
 //スクリーンサイズ
 const SCREEN_W = BLOCK_SIZE * FIELD_COL;
@@ -299,7 +301,7 @@ function drawAll()
 	  if(score>=50000){overBgm=overBgm1;}
 	  overBgm.play();
 	  
-	  if(window_size >= 601)
+	  if(window_W >= 601)
 		{
 				/*スコア表示PC*/
 			  con.fillStyle = "rgba(33,33,33,0.6)";
@@ -558,7 +560,7 @@ function dropTetro()
 }
 
 // スマホ
-if(window_size<=600)
+if(window_W<=600)
 {
     // スマホ操作設定
     let tapCount = 0 ;/*ダブルタップ判定のためのカウント*/
