@@ -25,7 +25,6 @@
                     <i class="fas fa-caret-right"></i></button>
             </div>
         </div>
-        <!--<p id="p">©musukosan</p>-->
     </div>
     
 <!--</section>-->
@@ -100,7 +99,7 @@ let linec = 0;/*消したライン数*/
 let score = 0;/*トータルスコア*/
 
 //落ちるスピード
-let gameSpeed = 1000;/* 初期値*/
+let gameSpeed = 1200;/* 初期値*/
 
 //フィールドサイズ
 const FIELD_COL = 10;
@@ -239,7 +238,7 @@ tetro = TETRO_TYPES[ tetro_t ];
 
 init();
 drawAll();
-setInterval( dropTetro, gameSpeed );
+let initInterval = setInterval( dropTetro, gameSpeed );
 
 
 //初期化
@@ -491,9 +490,12 @@ function checkLine()
 			if( linec % 4 == 0 )
 			{
 			    lv++;													/*レベルアップ*/
-			    lvb = 1 + ( 0.1 * lv );				/*スコア補正をプラス*/
-			    gameSpeed = gameSpeed - 50;		/*ゲームスピードアップ*/
+			    lvb = 1 + ( 0.1 * lv ); 			/*スコア補正をプラス*/
+			    gameSpeed -= 60;		          /*ゲームスピードアップ*/
 			    if(gameSpeed<=0)gameSpeed = 1;/*ゲームスピード上限*/
+			    
+			    clearInterval(initInterval);
+			    initInterval = setInterval( dropTetro, gameSpeed );
 			    
 					/*レベルを条件にBGMと背景更新*/
 					if(lv == 3 || lv == 14)
